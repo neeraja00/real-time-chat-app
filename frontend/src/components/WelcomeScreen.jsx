@@ -90,7 +90,7 @@ const WelcomeScreen = () => {
               id="username-login"
               type="text"
               className="text-input"
-              placeholder="e.g. Abhiram"
+              placeholder="Enter your name"
               value={usernameInput}
               onChange={(e) => {
                 setUsernameInput(e.target.value);
