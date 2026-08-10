@@ -8,7 +8,8 @@ export const socket = io(SOCKET_URL, {
   reconnection: true,
   reconnectionDelay: 2000,
   reconnectionAttempts: 15,
-  timeout: 10000,
+  timeout: 20000,
+  transports: ['websocket', 'polling'],
   withCredentials: true
 });
 

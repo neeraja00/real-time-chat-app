@@ -13,7 +13,11 @@ dns.setDefaultResultOrder('ipv4first');
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+
+// Build allowed origins list (same logic as app.js CORS)
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((o) => o.trim())
+  : ['http://localhost:5173'];
 
 // Initialize HTTP server
 const server = http.createServer(app);
@@ -21,10 +25,11 @@ const server = http.createServer(app);
 // Initialize Socket.io server with CORS policy
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_URL,
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true
   },
+  transports: ['websocket', 'polling'],
   pingTimeout: 60000,
   pingInterval: 25000
 });
@@ -38,7 +43,7 @@ const startServer = async () => {
   
   server.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-    console.log(`Socket.io CORS configured for origin: ${CLIENT_URL}`);
+    console.log(`Socket.io CORS configured for origins: ${allowedOrigins.join(', ')}`);
   });
 };
 
